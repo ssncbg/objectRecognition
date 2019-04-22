@@ -41,10 +41,6 @@ for i=1:length(inds)
     hold off
 end
 
-for i=1:length(inds)
-    perimeter = regionprops(redThresholdImage,'perimeter');
-    disp(perimeter(i));  
-end
 figure;	% Create a new figure window.
 	% Maximize the figure window.
 	set(gcf, 'Units','Normalized','OuterPosition',[0 0 1 1]);
