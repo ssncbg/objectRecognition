@@ -58,4 +58,7 @@ figure;	% Create a new figure window.
 		imshow(subImage);
 	end
 
-
+for i=1:length(inds)
+    area = regionprops(redThresholdImage,'area');
+    disp(area(i));  
+end
