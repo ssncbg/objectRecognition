@@ -1,7 +1,7 @@
 clear all, close all;
 set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 subplot(3, 3, 1);
-originalImage = imread('Moedas3.jpg');
+originalImage = imread('Moedas4.jpg');
 imshow(originalImage);
 title('Original Image');
 
@@ -35,26 +35,48 @@ imshow(redThresholdImage);
 title('Centroid');
 for i=1:length(inds)
     centroid = regionProps(i).Centroid;
-    disp(centroid);  
     hold on
     plot(centroid(1), centroid(2), 'r+', 'MarkerSize', 8, 'LineWidth', 1);
     hold off
 end
 
 figure;	% Create a new figure window.
+set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 	% Maximize the figure window.
-	set(gcf, 'Units','Normalized','OuterPosition',[0 0 1 1]);
 	for k = 1 : length(inds)           % Loop through all blobs.
 		% Find the bounding box of each blob.
 		thisBlobsBoundingBox = regionProps(k).BoundingBox;  % Get list of pixels in current blob.
 		% Extract out this coin into it's own image.
 		subImage = imcrop(originalImage, thisBlobsBoundingBox);
         
+        perimeter = regionProps(k).Perimeter;
+        area = regionProps(k).Area;
         subplot(3, 4, k);
 		imshow(subImage);
+        title (sprintf('Perimeter: %g \nArea: %g', perimeter, area));
+    end
+    
+    filledImage = imerode(filledImage,se);
+    
+    [lb num]=bwlabel(filledImage);
+    regionProps = regionprops(lb, rgb2gray(originalImage),'all');
+    inds = find([regionProps.Area]>20);
+    
+    for k = 1:length(inds)
+    end
+    
+    figure;
+    set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
+    for k = 1 : length(inds)           % Loop through all blobs.
+		% Find the bounding box of each blob.
+		thisBlobsBoundingBox = regionProps(k).BoundingBox;  % Get list of pixels in current blob.
+		% Extract out this coin into it's own image.
+		subImage = imcrop(originalImage, thisBlobsBoundingBox);
+        
+        perimeter = regionProps(k).Perimeter;
+        area = regionProps(k).Area;
+        subplot(3, 4, k);
+		imshow(subImage);
+        title (sprintf('Perimeter: %g \nArea: %g', perimeter, area));
 	end
 
-for i=1:length(inds)
-    area = regionprops(redThresholdImage,'area');
-    disp(area(i));  
-end
