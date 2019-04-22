@@ -1,5 +1,5 @@
 clear all, close all;
-
+set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 subplot(3, 3, 1);
 originalImage = imread('Moedas3.jpg');
 imshow(originalImage);
@@ -32,5 +32,15 @@ imshow(whiteImage);
 %emptyImage.text(10, 10, 'Total objects:');
 
 
+subplot(3, 3, 4);
+imshow(redThresholdImage);
+title('Centroid');
+for i=1:length(inds)
+    centroid = regionProps(i).Centroid;
+    disp(centroid);  
+    hold on
+    plot(centroid(1), centroid(2), 'r+', 'MarkerSize', 8, 'LineWidth', 1);
+    hold off
+end
 
 
