@@ -43,4 +43,9 @@ for i=1:length(inds)
     hold off
 end
 
+for i=1:length(inds)
+    perimeter = regionprops(redThresholdImage,'perimeter');
+    disp(perimeter(i));  
+end
+
 
