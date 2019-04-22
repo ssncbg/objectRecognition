@@ -48,4 +48,7 @@ for i=1:length(inds)
     disp(perimeter(i));  
 end
 
-
+for i=1:length(inds)
+    area = regionprops(redThresholdImage,'area');
+    disp(area(i));  
+end
