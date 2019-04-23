@@ -1,7 +1,7 @@
 clear all, close all;
 set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 subplot(3, 3, 1);
-originalImage = imread('Moedas4.jpg');
+originalImage = imread('Moedas1.jpg');
 imshow(originalImage);
 title('Original Image');
 
@@ -16,12 +16,12 @@ redThresholdImage = (redBand >= redThresholdValue);
 %filledImage = imerode(filledImage,se);
 
 
-[lb num]=bwlabel(redThresholdImage);
+[lb num]=bwlabel(redThresholdImage,4);
 regionPropsBeforeFill = regionprops(lb, rgb2gray(originalImage),'all');
 
 filledImage = imfill(redThresholdImage, 8,'holes');
 
-[lb num]=bwlabel(filledImage);
+[lb num]=bwlabel(filledImage,4);
 regionProps = regionprops(lb, rgb2gray(originalImage),'all');
 
 %Fills small holes
@@ -40,7 +40,8 @@ imshow(redThresholdImage);
 title('Threshold Image');
 xlabel(sprintf('Number of objects: %d',length(numberOfObjects)));
 
-%Centroid
+%==========================================================================
+%Visualization centroid of each object
 subplot(3, 3, 3);
 imshow(redThresholdImage);
 title('Centroid');
@@ -51,11 +52,28 @@ for i=1:length(numberOfObjects)
     hold off
 end
 
-%Individual objects with perimeter and area
+%==========================================================================
+%Relative distance of the objects
+subplot(3, 3, 4);
+imshow(redThresholdImage);
+title('Distance between objects')
+for k = 1 : length(numberOfObjects)
+   for i = k+1 : length(numberOfObjects)
+       hold on
+       centroidA = regionProps(k).Centroid;
+       centroidB = regionProps(i).Centroid;
+       line([centroidA(1) centroidB(1)], [centroidA(2) centroidB(2)]);
+       hold off
+   end
+end
+
+%==========================================================================
+%Visualization perimeter and area of each object
+%New figure with individual images of each object
 figure;
 set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 % Maximize the figure window.
-for k = 1 : length(numberOfObjects)           % Loop through all blobs.
+for k = 1 : length(numberOfObjects)
     % Find the bounding box of each blob.
     thisBlobsBoundingBox = regionProps(k).BoundingBox;  % Get list of pixels in current blob.
     % Extract out this coin into it's own image.
@@ -71,7 +89,6 @@ end
 
 %==========================================================================
 %Ordering the objects depending on the, area, perimeter, circularity or sharpness
-
 figure;
 set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 subplot(4, length(numberOfObjects), 1);
@@ -129,8 +146,11 @@ for k = 1 : length(numberOfObjects)
     title (sprintf('Circularity: %g', circularity));
 end
 
+%TODO: Sharpness
+
 mainTitle = suptitle('Ordered objects');
 mainTitle.FontSize = 20;
+%==========================================================================
         
   
 
