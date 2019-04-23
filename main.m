@@ -54,102 +54,16 @@ end
 
 %==========================================================================
 %Relative distance of the objects
-subplot(3, 3, 4);
-imshow(redThresholdImage);
-title('Distance between objects')
-for k = 1 : length(numberOfObjects)
-   for i = k+1 : length(numberOfObjects)
-       hold on
-       centroidA = regionProps(k).Centroid;
-       centroidB = regionProps(i).Centroid;
-       line([centroidA(1) centroidB(1)], [centroidA(2) centroidB(2)]);
-       hold off
-   end
-end
+distanceObjects(redThresholdImage, regionProps, length(numberOfObjects));
 
 %==========================================================================
 %Visualization perimeter and area of each object
 %New figure with individual images of each object
-figure;
-set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
-% Maximize the figure window.
-for k = 1 : length(numberOfObjects)
-    % Find the bounding box of each blob.
-    thisBlobsBoundingBox = regionProps(k).BoundingBox;  % Get list of pixels in current blob.
-    % Extract out this coin into it's own image.
-    subImage = imcrop(originalImage, thisBlobsBoundingBox);
-
-    perimeter = regionProps(k).Perimeter;
-    area = regionProps(k).Area;
-    circularity = (perimeter^2)/(4*pi*area);
-    subplot(3, 4, k);
-    imshow(subImage);
-    title (sprintf('Perimeter: %g \nArea: %g \nCircularity: %g', perimeter, area, circularity));
-end
+%individualObjects(originalImage, regionProps, length(numberOfObjects));
 
 %==========================================================================
 %Ordering the objects depending on the, area, perimeter, circularity or sharpness
-figure;
-set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
-subplot(4, length(numberOfObjects), 1);
-
-%Perimeter
-[blah, order] = sort([regionProps(:).Perimeter], 'descend'); 
-sortedObjectsPerimeter = regionProps(order);
-for k = 1 : length(numberOfObjects)
-    % Find the bounding box of each blob.
-    thisBlobsBoundingBox = sortedObjectsPerimeter(k).BoundingBox;  % Get list of pixels in current blob.
-    % Extract out this coin into it's own image.
-    subImage = imcrop(originalImage, thisBlobsBoundingBox);
-    perimeter = sortedObjectsPerimeter(k).Perimeter;
-    
-    subplot(4, length(numberOfObjects), k);
-    imshow(subImage);
-    title (sprintf('Perimeter: %g', perimeter));
-end
-
-%Area
-[blah, order] = sort([regionProps(:).Area], 'descend'); 
-sortedObjectsArea = regionProps(order);
-for k = 1 : length(numberOfObjects)
-    % Find the bounding box of each blob.
-    thisBlobsBoundingBox = sortedObjectsArea(k).BoundingBox;  % Get list of pixels in current blob.
-    % Extract out this coin into it's own image.
-    subImage = imcrop(originalImage, thisBlobsBoundingBox);
-    area = sortedObjectsArea(k).Area;
-    
-    subplot(4, length(numberOfObjects), length(numberOfObjects) + k);
-    imshow(subImage);
-    title (sprintf('Area: %g', area));
-end
-
-%Circularity
-allPerimeters = [regionProps.Perimeter];
-allAreas = [regionProps.Area];
-allCircularities = allPerimeters  .^ 2 ./ (4 * pi* allAreas);
-
-[blah, order] = sort(allCircularities(:), 'descend'); 
-sortedObjectsCircularity = regionProps(order);
-
-for k = 1 : length(numberOfObjects)
-    % Find the bounding box of each blob.
-    thisBlobsBoundingBox = sortedObjectsCircularity(k).BoundingBox;  % Get list of pixels in current blob.
-    % Extract out this coin into it's own image.
-    subImage = imcrop(originalImage, thisBlobsBoundingBox);
-    
-    perimeter = sortedObjectsCircularity(k).Perimeter;
-    area = sortedObjectsCircularity(k).Area;
-    circularity = (perimeter^2)/(4*pi*area);
-    
-    subplot(4, length(numberOfObjects), length(numberOfObjects)*2 + k);
-    imshow(subImage);
-    title (sprintf('Circularity: %g', circularity));
-end
-
-%TODO: Sharpness
-
-mainTitle = suptitle('Ordered objects');
-mainTitle.FontSize = 20;
+%orderingObjects(originalImage, regionProps, length(numberOfObjects));
 %==========================================================================
         
   
