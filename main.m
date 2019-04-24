@@ -75,20 +75,20 @@ hold off
 
 %==========================================================================
 %Relative distance of the objects
-distanceObjects(redThresholdImage, regionProps, length(numberOfObjects));
+%distanceObjects(redThresholdImage, regionProps, length(numberOfObjects));
 %==========================================================================
 %Visualization perimeter and area of each object
 %New figure with individual images of each object
-individualObjects(originalImage, regionProps, length(numberOfObjects));
+%individualObjects(originalImage, regionProps, length(numberOfObjects));
 %==========================================================================
 %Ordering the objects depending on the, area, perimeter, circularity 
 %or sharpness
-orderingObjects(originalImage, regionProps, length(numberOfObjects));
+%orderingObjects(originalImage, regionProps, length(numberOfObjects));
 %==========================================================================
 %From a user selection of given object (the user should select one object), 
 %generate a figure that shows an ordered list of objects
 %i.e. from the most similar to the less similar of the chosen object. 
-similarObjects(originalImage, binaryImage);
+similarObjects(originalImage, binaryImage, regionProps, length(numberOfObjects));
 %==========================================================================
 
         
