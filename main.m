@@ -88,8 +88,9 @@ hold off
 %From a user selection of given object (the user should select one object), 
 %generate a figure that shows an ordered list of objects
 %i.e. from the most similar to the less similar of the chosen object. 
-similarObjects(originalImage, binaryImage, regionProps, length(numberOfObjects));
+%similarObjects(originalImage, binaryImage, regionProps, length(numberOfObjects));
 %==========================================================================
+derivative(redThresholdImage);
 
         
   
