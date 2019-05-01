@@ -7,7 +7,7 @@ minAreaObject = 20;
 set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 subplot(numberOfColumns, numberOfRows, 1);
 
-originalImage = imread('Moedas1.jpg');
+originalImage = imread('Moedas3.jpg');
 imshow(originalImage);
 title('Original Image');
 
@@ -41,7 +41,7 @@ for i = 1 : length(regionProps)
     end
 end 
 
-se = strel('disk', 10);
+se = strel('disk', 6);
 binaryImage = imerode(binaryImage,se);
  
 [lb num]=bwlabel(binaryImage,4);
@@ -90,7 +90,10 @@ hold off
 %i.e. from the most similar to the less similar of the chosen object. 
 %similarObjects(originalImage, binaryImage, regionProps, length(numberOfObjects));
 %==========================================================================
-derivative(redThresholdImage);
+%Derivative of the objects boundary
+derivative(binaryImage, length(numberOfObjects));
+%==========================================================================
+
 
         
   
