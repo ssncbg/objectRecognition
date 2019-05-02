@@ -4,26 +4,30 @@ function similarObjects(originalImage, binaryImage, regionProps, numberOfObjects
     imshow(originalImage); hold on;
 
     n = 0;
-    but = 1;
+    selected = 0;
 
-    while(but == 1 | but == 32)
-        [ci, li, but] = ginput(1);
-        if but == 1
-            n = n + 1;
-            cp(n) = ci;
-            lp(n) = li;
-            plot(ci, li, 'r.', 'MarkerSize', 18); drawnow;
-            if n > 1
-                plot(cp(:), lp(:), 'r.-', 'MarkerSize', 8); drawnow;
-            end
+    while(selected == 0)
+        [x, y] = ginput(1);
+        selected = 1;
+    end
+        
+    %regionPropsCoin = null;
+    for k = 1 : numberOfObjects
+        % Find the bounding box of each blob.
+        thisBlobsCentroid = regionProps(k).Centroid;  % Get list of pixels in current blob.
+        radius = regionProps(k).EquivDiameter / 2;
+        xMin = thisBlobsCentroid(1) - radius;
+        xMax = thisBlobsCentroid(1) + radius;
+        yMin = thisBlobsCentroid(2) - radius;
+        yMax = thisBlobsCentroid(2) + radius;
+        
+        if(x >= xMin) && (x <= xMax) && (y >= yMin) && (y <= yMax) 
+            regionPropsCoin = regionProps(k);
+            break
         end
     end
-    cp = cp'; lp = lp';
 
-    polygonShape = roipoly(originalImage, cp, lp);
-    singleCoin = bitand(polygonShape, binaryImage);
-
-    regionPropsCoin = regionprops(singleCoin,'Centroid', 'Perimeter', 'Area', 'BoundingBox');
+    %regionPropsCoin = regionprops(singleCoin,'Centroid', 'Perimeter', 'Area', 'BoundingBox');
     
     %Perimeter
     allPerimeters = [regionProps.Perimeter];
