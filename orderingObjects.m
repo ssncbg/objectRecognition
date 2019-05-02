@@ -1,4 +1,4 @@
-function orderingObjects(originalImage, regionProps, numberOfObjects)
+    function orderingObjects(originalImage, regionProps, numberOfObjects)
     figure;
     set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 
