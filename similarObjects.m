@@ -1,21 +1,20 @@
-function similarObjects(originalImage, binaryImage, regionProps, numberOfObjects)
+function similarObjects(originalImage, regionProps, numberOfObjects)
     figure
     set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
     imshow(originalImage); hold on;
 
-    n = 0;
     selected = 0;
 
     while(selected == 0)
         [x, y] = ginput(1);
         selected = 1;
     end
-        
-    %regionPropsCoin = null;
+    
+    %searchs for clicked object
     for k = 1 : numberOfObjects
-        % Find the bounding box of each blob.
-        thisBlobsCentroid = regionProps(k).Centroid;  % Get list of pixels in current blob.
+        thisBlobsCentroid = regionProps(k).Centroid;
         radius = regionProps(k).EquivDiameter / 2;
+        
         xMin = thisBlobsCentroid(1) - radius;
         xMax = thisBlobsCentroid(1) + radius;
         yMin = thisBlobsCentroid(2) - radius;
@@ -26,10 +25,8 @@ function similarObjects(originalImage, binaryImage, regionProps, numberOfObjects
             break
         end
     end
-
-    %regionPropsCoin = regionprops(singleCoin,'Centroid', 'Perimeter', 'Area', 'BoundingBox');
     
-    %Perimeter
+    %====Perimeter=========================================================
     allPerimeters = [regionProps.Perimeter];
     diferencePerimeters = abs(regionPropsCoin(1).Perimeter - allPerimeters);
     [blah, order] = sort(diferencePerimeters(:), 'ascend'); 
@@ -37,7 +34,8 @@ function similarObjects(originalImage, binaryImage, regionProps, numberOfObjects
     
     subplot(4, numberOfObjects, 1);
     imshow(imcrop(originalImage, sortedObjectsPerimeters(1).BoundingBox));
-    title (sprintf('Selected Object\n Perimeter: %g',sortedObjectsPerimeters(1).Area));
+    title (sprintf('Selected Object\n Perimeter: %g',...
+        round(sortedObjectsPerimeters(1).Perimeter)));
     
     sortedObjectsPerimeters(1) = [];
     
@@ -47,14 +45,14 @@ function similarObjects(originalImage, binaryImage, regionProps, numberOfObjects
         % Extract out this coin into it's own image.
         subImage = imcrop(originalImage, thisBlobsBoundingBox);
 
-        perimeter = sortedObjectsPerimeters(k).Perimeter;
+        perimeter = round(sortedObjectsPerimeters(k).Perimeter);
         
         subplot(4, numberOfObjects, k + 1);
         imshow(subImage);
         title (sprintf('Perimeter: %g', perimeter));
     end
     
-    %Area
+    %====Area==============================================================
     allAreas = [regionProps.Area];
     diferenceArea = abs(regionPropsCoin(1).Area - allAreas);
     [blah, order] = sort(diferenceArea(:), 'ascend'); 
@@ -79,7 +77,7 @@ function similarObjects(originalImage, binaryImage, regionProps, numberOfObjects
         title (sprintf('Area: %g', area));
     end
     
-    %Circularity
+    %====Circularity=======================================================
     allCircularities = allPerimeters  .^ 2 ./ (4 * pi* allAreas);
     coinSelectedCircularity = regionPropsCoin(1).Perimeter  .^ 2 ./ (4 * pi* regionPropsCoin(1).Area);
     diferenceCircularities = abs(coinSelectedCircularity - allCircularities);
@@ -88,13 +86,14 @@ function similarObjects(originalImage, binaryImage, regionProps, numberOfObjects
         
     subplot(4, numberOfObjects, numberOfObjects*2 + 1);
     imshow(imcrop(originalImage, sortedObjectsCircularity(1).BoundingBox));
-    title (sprintf('Selected Object\n Circularity: %g', coinSelectedCircularity));
+    title (sprintf('Selected Object\n Circularity: %.2g', coinSelectedCircularity));
     
     sortedObjectsCircularity(1) = [];
     
     for k = 1 : numberOfObjects-1
         % Find the bounding box of each blob.
         thisBlobsBoundingBox = sortedObjectsCircularity(k).BoundingBox;  % Get list of pixels in current blob.
+        
         % Extract out this coin into it's own image.
         subImage = imcrop(originalImage, thisBlobsBoundingBox);
 
@@ -104,6 +103,6 @@ function similarObjects(originalImage, binaryImage, regionProps, numberOfObjects
         
         subplot(4, numberOfObjects, numberOfObjects*2 + k + 1);
         imshow(subImage);
-        title (sprintf('Circularity: %g', circularity));
+        title (sprintf('Circularity: %.2g', circularity));
     end
 end

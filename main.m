@@ -65,6 +65,7 @@ for i=1:length(numberOfObjects)
     hold off
 end
 
+%==========================================================================
 %Visualization boundarie of each object
 subplot(numberOfColumns, numberOfRows, 4);
 imshow(binaryImage);
@@ -84,12 +85,10 @@ ten_cent = 0;
 twenty_cent = 0;
 fifty_cent = 0;
 euro = 0;
-B = bwboundaries(binaryImage, 'noholes');
 
 threshold = 0.88;
-for k = 1:length(B)
+for k = 1:length(numberOfObjects)
     %find the x,y coordinates for the boundary of k
-    boundary = B{k};
     area = regionProps(k).Area;
     %calculate the metric deciding whether the object is round, if object
     %is above given threshold it's circulat
@@ -98,9 +97,9 @@ for k = 1:length(B)
     %area will be used to decide which type of coin it is.
     if metric >= threshold
         
-        % Find the bounding box of each blob.
-        thisBlobsBoundingBox = regionProps(k).BoundingBox;  % Get list of pixels in current blob.
-        % Extract out this coin into it's own image.
+        % Place image of coin on top of binary picture
+        thisBlobsBoundingBox = regionProps(k).BoundingBox;
+        
         radius = regionProps(k).EquivDiameter / 2;
         subImage = imcrop(originalImage, thisBlobsBoundingBox);
         hold on
@@ -126,17 +125,10 @@ for k = 1:length(B)
     
 end
 
-total_amount = one_cent*0.01 + two_cent*0.02 + five_cent*0.05 + ten_cent*0.1 + ...
-twenty_cent*0.2 + fifty_cent*0.5 + euro;
+total_amount = one_cent*0.01 + two_cent*0.02 + five_cent*0.05 + ...
+ten_cent*0.1 + twenty_cent*0.2 + fifty_cent*0.5 + euro;
 
 title(sprintf('Total amount: %g', total_amount));
-
-%subplot(numberOfColumns, numberOfRows, 6);
-%imshow(binaryImage);
-
-%title(sprintf('Number 1 cent coins: %d\nNumber 2 cent coins: %d\nNumber 2 cent coins: %d\nNumber 10 cent coins: %d\n Number 20 cent coins: %d\n Number 50 cent coins: %d\n Number 1 euro coins: %d'...
-%   , one_cent,two_cent, two_cent, ten_cent, twenty_cent, fifty_cent, euro));
-
 
 %==========================================================================
 %Relative distance of the objects
@@ -153,7 +145,7 @@ title(sprintf('Total amount: %g', total_amount));
 %From a user selection of given object (the user should select one object), 
 %generate a figure that shows an ordered list of objects
 %i.e. from the most similar to the less similar of the chosen object. 
-similarObjects(originalImage, binaryImage, regionProps, length(numberOfObjects));
+similarObjects(originalImage, regionProps, length(numberOfObjects));
 %==========================================================================
 %Derivative of the objects boundary
 %derivative(binaryImage, length(numberOfObjects));
