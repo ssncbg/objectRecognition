@@ -93,7 +93,49 @@ hold off
 %Derivative of the objects boundary
 derivative(binaryImage, length(numberOfObjects));
 %==========================================================================
+%Calculate the amount of money in the object
+one_cent = 0;
+two_cent = 0;
+five_cent = 0;
+ten_cent = 0;
+twenty_cent = 0;
+fifty_cent = 0;
+euro = 0;
+B = bwboundaries(binaryImage, 'noholes');
+threshold = 0.88;
+for k = 1:length(B)
+    %find the x,y coordinates for the boundary of k
+    boundary = B{k};
+    area = regionProps(k).Area;
+    %calculate the metric deciding whether the object is round, if object
+    %is above given threshold it's circulat
+    metric = 4*pi*area/regionProps(k).Perimeter^2;
+    disp(metric)
+    %if object is above or equal to the threshold, it is a coin and the
+    %area will be used to decide which type of coin it is.
+    if metric >= threshold
+        disp(area)
+        if(area < 12000 && area > 11000)
+            ten_cent = ten_cent+1;
+        elseif (area < 8000 && area > 7000)
+            one_cent = one_cent+1;
+        elseif(area < 11000 && area > 10000)
+            two_cent = two_cent+1;
+        elseif(area < 15500 && area > 14500)
+            twenty_cent = twenty_cent+1;
+        elseif(area < 14000 && area > 13000)
+            five_cent = five_cent+1;
+        elseif(area < 17000 && area > 16000)
+            euro = euro+1;
+        elseif(area < 19000 && area > 17500)
+            fifty_cent = fifty_cent+1;
+        end
+    end
+    
+end
 
+total_amount = one_cent*0.01 + two_cent*0.02 + five_cent*0.05 + ten_cent*0.1 + ...
+twenty_cent*0.2 + fifty_cent*0.5 + euro;
 
         
   
