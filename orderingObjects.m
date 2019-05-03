@@ -1,4 +1,4 @@
-    function orderingObjects(originalImage, regionProps, numberOfObjects)
+    function orderingObjects(originalImage, regionProps, numberOfObjects, sharp)
     figure;
     set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 
@@ -54,8 +54,23 @@
         imshow(subImage);
         title (sprintf('Circularity: %g', circularity));
     end
-
-    %TODO: Sharpness
+    
+    %Sharpness
+    
+    [blah, order] = sort(sharp(:), 'descend'); 
+    sortedObjectsSharp = regionProps(order);
+   
+    for k = 1 : numberOfObjects
+         disp(blah(k));
+        % Find the bounding box of each blob.
+         thisBlobsBoundingBox = sortedObjectsSharp(k).BoundingBox;  % Get list of pixels in current blob.
+         % Extract out this coin into it's own image.
+         subImage = imcrop(originalImage, thisBlobsBoundingBox);
+         sharpness = blah(k);
+         subplot(4, numberOfObjects, numberOfObjects*3 + k);
+         imshow(subImage);
+         title (sprintf('Sharpness: %g', sharpness));
+    end
 
     mainTitle = suptitle('Ordered objects');
     mainTitle.FontSize = 20;

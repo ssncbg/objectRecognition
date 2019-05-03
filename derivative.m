@@ -1,12 +1,13 @@
-function derivative(image, numberOfObjects)
+function sharp = derivative(image, numberOfObjects)
     figure;
     set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
     plotPosition = 1;
-    stepSize=30;
+    stepSize=10;
     B = bwboundaries(image, 'noholes');
     %get 1st object to test
-    for i=1:size(B)
-        A = B(i);
+    sharp = [];
+    for j=1:size(B)
+        A = B(j);
         %convert to mat
         C = cell2mat(A);
         [row,col] = size(C);
@@ -30,6 +31,7 @@ function derivative(image, numberOfObjects)
             end
         end    
         D = diff(Y)/stepSize;
+        S = diff(D)/stepSize;
         subplot(numberOfObjects, 3, plotPosition);
         plot(X(:),Y(:));
         plotPosition = plotPosition + 1;
@@ -39,7 +41,13 @@ function derivative(image, numberOfObjects)
         plotPosition = plotPosition + 1;
         
         subplot(numberOfObjects, 3, plotPosition);
-        
-        plot(diff(D)/stepSize);  
-        plotPosition = plotPosition + 1;
+        plot(S,'b.');
+        hold on;
+        [xMin,yMin,xMax,yMax, sharpObj] = sharpness(S);
+        sharp = [sharp;sharpObj];
+        plot(xMin,yMin,'or');
+        plot(xMax,yMax,'og');
+        plotPosition = plotPosition + 1;   
     end
+end
+    

@@ -7,7 +7,7 @@ minAreaObject = 20;
 set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 subplot(numberOfColumns, numberOfRows, 1);
 
-originalImage = imread('Moedas4.jpg');
+originalImage = imread('Moedas3.jpg');
 imshow(originalImage);
 title('Original Image');
 
@@ -138,18 +138,19 @@ title(sprintf('Total amount: %g', total_amount));
 %New figure with individual images of each object
 %individualObjects(originalImage, regionProps, length(numberOfObjects));
 %==========================================================================
+%Derivative of the objects boundary
+sharp = derivative(binaryImage, length(numberOfObjects));
+%==========================================================================
 %Ordering the objects depending on the, area, perimeter, circularity 
 %or sharpness
-%orderingObjects(originalImage, regionProps, length(numberOfObjects));
+orderingObjects(originalImage, regionProps, length(numberOfObjects), sharp);
 %==========================================================================
 %From a user selection of given object (the user should select one object), 
 %generate a figure that shows an ordered list of objects
 %i.e. from the most similar to the less similar of the chosen object. 
-similarObjects(originalImage, regionProps, length(numberOfObjects));
+%similarObjects(originalImage, regionProps, length(numberOfObjects));
 %==========================================================================
-%Derivative of the objects boundary
-%derivative(binaryImage, length(numberOfObjects));
-%==========================================================================
+
 
         
   
