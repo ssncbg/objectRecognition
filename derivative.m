@@ -1,6 +1,7 @@
 function sharp = derivative(image, numberOfObjects)
     figure;
-    set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
+    set(gcf, 'Position', get(0, 'Screensize'));
+    %set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
     plotPosition = 1;
     stepSize=10;
     B = bwboundaries(image, 'noholes');
@@ -33,21 +34,34 @@ function sharp = derivative(image, numberOfObjects)
         D = diff(Y)/stepSize;
         S = diff(D)/stepSize;
         subplot(numberOfObjects, 3, plotPosition);
+        
         plot(X(:),Y(:));
+        hold on
+        plot(X(:),Y(:), 'b.');
+        hold off
+        if(j==1)
+           title(sprintf('Object bondaries')); 
+        end
         plotPosition = plotPosition + 1;
         
         subplot(numberOfObjects, 3, plotPosition);
         plot(D);  
+        if(j==1)
+           title(sprintf('1st Derivative')); 
+        end
         plotPosition = plotPosition + 1;
         
         subplot(numberOfObjects, 3, plotPosition);
-        plot(S,'b.');
+        plot(S,'b');
         hold on;
         [xMin,yMin,xMax,yMax, sharpObj] = sharpness(S);
         sharp = [sharp;sharpObj];
         plot(xMin,yMin,'or');
         plot(xMax,yMax,'og');
-        plotPosition = plotPosition + 1;   
+        if(j==1)
+           title(sprintf('2nd derivative (sharpness)')); 
+        end
+        plotPosition = plotPosition + 1;  
     end
 end
     

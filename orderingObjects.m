@@ -61,7 +61,6 @@
     sortedObjectsSharp = regionProps(order);
    
     for k = 1 : numberOfObjects
-         disp(blah(k));
         % Find the bounding box of each blob.
          thisBlobsBoundingBox = sortedObjectsSharp(k).BoundingBox;  % Get list of pixels in current blob.
          % Extract out this coin into it's own image.
