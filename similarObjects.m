@@ -1,4 +1,4 @@
-function similarObjects(originalImage, regionProps, numberOfObjects)
+function similarObjects(originalImage, regionProps, numberOfObjects, sharpness)
     figure
     set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
     imshow(originalImage); hold on;
@@ -104,5 +104,39 @@ function similarObjects(originalImage, regionProps, numberOfObjects)
         subplot(4, numberOfObjects, numberOfObjects*2 + k + 1);
         imshow(subImage);
         title (sprintf('Circularity: %.2g', circularity));
+    end
+    
+    %====Sharpness=========================================================
+    %allCircularities = allPerimeters  .^ 2 ./ (4 * pi* allAreas);
+    %coinSelectedCircularity = regionPropsCoin(1).Perimeter  .^ 2 ./ (4 * pi* regionPropsCoin(1).Area);
+    
+    %index = find([regionProps.Centroid] == regionPropsCoin(1).Centroid);
+    for index = 1 : numberOfObjects
+        if(regionProps(index).Centroid == regionPropsCoin(1).Centroid)
+            break
+        end
+    end
+    
+    diferenceSharpnesss = abs(sharpness(index) - sharpness);
+    [blah, order] = sort(diferenceSharpnesss(:), 'ascend'); 
+    sortedObjectsSharpness = regionProps(order);
+    sortedSharpness = sharpness(order);
+        
+    subplot(4, numberOfObjects, numberOfObjects*3 + 1);
+    imshow(imcrop(originalImage, sortedObjectsSharpness(1).BoundingBox));
+    title (sprintf('Selected Object\n Circularity: %.2g', sortedSharpness(1)));
+    
+    sortedObjectsSharpness(1) = [];
+    
+    for k = 1 : numberOfObjects-1
+        % Find the bounding box of each blob.
+        thisBlobsBoundingBox = sortedObjectsSharpness(k).BoundingBox;  % Get list of pixels in current blob.
+        
+        % Extract out this coin into it's own image.
+        subImage = imcrop(originalImage, thisBlobsBoundingBox);
+        
+        subplot(4, numberOfObjects, numberOfObjects*3 + k + 1);
+        imshow(subImage);
+        title (sprintf('Sharpness: %.2g', sortedSharpness(k)));
     end
 end

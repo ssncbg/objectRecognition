@@ -46,19 +46,19 @@ binaryImage = imerode(binaryImage,se);
  
 [lb num]=bwlabel(binaryImage,4);
 regionProps = regionprops(lb, rgb2gray(originalImage),'all');
-numberOfObjects = find([regionProps.Area]>minAreaObject);
+numberOfObjects = length(find([regionProps.Area]>minAreaObject));
 
 subplot(numberOfColumns, numberOfRows, 2);
 imshow(binaryImage);
 title('Binary Image');
-xlabel(sprintf('Number Of Objects: %d', length(numberOfObjects)));
+xlabel(sprintf('Number Of Objects: %d', numberOfObjects));
 
 %==========================================================================
 %Visualization centroid of each object
 subplot(numberOfColumns, numberOfRows, 3);
 imshow(binaryImage);
 title('Objects Centroids');
-for i=1:length(numberOfObjects)
+for i=1:numberOfObjects
     centroid = regionProps(i).Centroid;
     hold on
     plot(centroid(1), centroid(2), 'r+', 'MarkerSize', 8, 'LineWidth', 1);
@@ -87,7 +87,7 @@ fifty_cent = 0;
 euro = 0;
 
 threshold = 0.88;
-for k = 1:length(numberOfObjects)
+for k = 1:numberOfObjects
     %find the x,y coordinates for the boundary of k
     area = regionProps(k).Area;
     %calculate the metric deciding whether the object is round, if object
@@ -132,23 +132,23 @@ title(sprintf('Total amount: %g', total_amount));
 
 %==========================================================================
 %Relative distance of the objects
-%distanceObjects(redThresholdImage, regionProps, length(numberOfObjects));
+%distanceObjects(redThresholdImage, regionProps, numberOfObjects);
 %==========================================================================
 %Visualization perimeter and area of each object
 %New figure with individual images of each object
-%individualObjects(originalImage, regionProps, length(numberOfObjects));
+%individualObjects(originalImage, regionProps, numberOfObjects);
 %==========================================================================
 %Derivative of the objects boundary
-sharp = derivative(binaryImage, length(numberOfObjects));
+sharp = derivative(binaryImage, numberOfObjects);
 %==========================================================================
 %Ordering the objects depending on the, area, perimeter, circularity 
 %or sharpness
-orderingObjects(originalImage, regionProps, length(numberOfObjects), sharp);
+%orderingObjects(originalImage, regionProps, numberOfObjects, sharp);
 %==========================================================================
 %From a user selection of given object (the user should select one object), 
 %generate a figure that shows an ordered list of objects
 %i.e. from the most similar to the less similar of the chosen object. 
-%similarObjects(originalImage, regionProps, length(numberOfObjects));
+similarObjects(originalImage, regionProps, numberOfObjects, sharp);
 %==========================================================================
 
 
