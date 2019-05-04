@@ -7,7 +7,7 @@ minAreaObject = 20;
 set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 subplot(numberOfColumns, numberOfRows, 1);
 
-originalImage = imread('Moedas1.jpg');
+originalImage = imread('Moedas4.jpg');
 imshow(originalImage);
 title('Original Image');
 

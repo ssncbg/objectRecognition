@@ -16,9 +16,19 @@
         thisBlobsBoundingBox = sortedObjectsPerimeter(k).BoundingBox;
 
         subImage = imcrop(binaryImage, thisBlobsBoundingBox);
+        [subImage,nObj] = bwlabel(subImage);
         
         indexColor = round(numberOfColor/ (numberOfObjects - k + 1));
-        rgbPerimeter = label2rgb(bwlabel(subImage), colors(indexColor, :),'k');
+        colorUse = [];
+        for i = 1 : nObj
+            int = indexColor + i;
+            if (indexColor >63)
+                colorUse = [colorUse; colors(63, :)];
+            else
+                colorUse = [colorUse; colors(int, :)];
+            end
+        end
+        rgbPerimeter = label2rgb(bwlabel(subImage), colorUse,'k');
         hold on
         image(round(sortedObjectsPerimeter(k).BoundingBox(1)), ...
             round(sortedObjectsPerimeter(k).BoundingBox(2)), rgbPerimeter);
@@ -39,7 +49,16 @@
         subImage = imcrop(binaryImage, thisBlobsBoundingBox);
         
         indexColor = round(numberOfColor/ (numberOfObjects - k + 1));
-        rgbPerimeter = label2rgb(bwlabel(subImage), colors(indexColor, :), 'k');
+        colorUse = [];
+        for i = 1 : nObj
+            int = indexColor + i;
+            if (indexColor >63)
+                colorUse = [colorUse; colors(63, :)];
+            else
+                colorUse = [colorUse; colors(int, :)];
+            end
+        end
+        rgbPerimeter = label2rgb(bwlabel(subImage), colorUse,'k');
         
         hold on
         image(round(sortedObjectsArea(k).BoundingBox(1)), ...
@@ -65,7 +84,16 @@
         subImage = imcrop(binaryImage, thisBlobsBoundingBox);
         
         indexColor = round(numberOfColor/ (numberOfObjects - k + 1));
-        rgbPerimeter = label2rgb(bwlabel(subImage), colors(indexColor, :), 'k');
+        colorUse = [];
+        for i = 1 : nObj
+            int = indexColor + i;
+            if (indexColor >63)
+                colorUse = [colorUse; colors(63, :)];
+            else
+                colorUse = [colorUse; colors(int, :)];
+            end
+        end
+        rgbPerimeter = label2rgb(bwlabel(subImage), colorUse,'k');
         
         hold on
         image(round(sortedObjectsCircularity(k).BoundingBox(1)), ...
@@ -88,7 +116,16 @@
         subImage = imcrop(binaryImage, thisBlobsBoundingBox);
         
         indexColor = round(numberOfColor/ (numberOfObjects - k + 1));
-        rgbPerimeter = label2rgb(bwlabel(subImage), colors(indexColor, :), 'k');
+        colorUse = [];
+        for i = 1 : nObj
+            int = indexColor + i;
+            if (indexColor >63)
+                colorUse = [colorUse; colors(63, :)];
+            else
+                colorUse = [colorUse; colors(int, :)];
+            end
+        end
+        rgbPerimeter = label2rgb(bwlabel(subImage), colorUse,'k');
         
         hold on
         image(round(sortedObjectsSharp(k).BoundingBox(1)), ...
