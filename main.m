@@ -132,14 +132,14 @@ title(sprintf('Total amount: %g', total_amount));
 
 %==========================================================================
 %Relative distance of the objects
-%distanceObjects(redThresholdImage, regionProps, numberOfObjects);
+distanceObjects(originalImage, regionProps, numberOfObjects);
 %==========================================================================
 %Visualization perimeter and area of each object
 %New figure with individual images of each object
 %individualObjects(originalImage, regionProps, numberOfObjects);
 %==========================================================================
 %Derivative of the objects boundary
-sharp = derivative(binaryImage, numberOfObjects);
+%sharp = derivative(binaryImage, numberOfObjects);
 %==========================================================================
 %Ordering the objects depending on the, area, perimeter, circularity 
 %or sharpness
@@ -148,7 +148,7 @@ sharp = derivative(binaryImage, numberOfObjects);
 %From a user selection of given object (the user should select one object), 
 %generate a figure that shows an ordered list of objects
 %i.e. from the most similar to the less similar of the chosen object. 
-similarObjects(originalImage, regionProps, numberOfObjects, sharp);
+%similarObjects(originalImage, regionProps, numberOfObjects, sharp);
 %==========================================================================
 
 
