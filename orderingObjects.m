@@ -1,14 +1,14 @@
-    function orderingObjects(labelImage, binaryImage, regionProps, numberOfObjects, sharp)
+    function orderingObjects(binaryImage, regionProps, numberOfObjects, sharp)
     figure;
     set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
-    colors = colormap('jet');
+    colors = colormap('hsv');
     numberOfColor = length(colors);
     
     %====Perimeter=========================================================
     [blah, order] = sort([regionProps(:).Perimeter], 'ascend');
     sortedObjectsPerimeter = regionProps(order);
     
-    subplot(2,2,1);
+    subplot(3,2,1);
     imshow(binaryImage);
     title('Order by Perimeter');
     for k = 1 : numberOfObjects
@@ -18,8 +18,7 @@
         subImage = imcrop(binaryImage, thisBlobsBoundingBox);
         
         indexColor = round(numberOfColor/ (numberOfObjects - k + 1));
-        rgbPerimeter = label2rgb(bwlabel(subImage), colors(indexColor, :), 'k');
-        
+        rgbPerimeter = label2rgb(bwlabel(subImage), colors(indexColor, :),'k');
         hold on
         image(round(sortedObjectsPerimeter(k).BoundingBox(1)), ...
             round(sortedObjectsPerimeter(k).BoundingBox(2)), rgbPerimeter);
@@ -30,7 +29,7 @@
     [blah, order] = sort([regionProps(:).Area], 'ascend'); 
     sortedObjectsArea = regionProps(order);
     
-    subplot(2,2,2);
+    subplot(3,2,2);
     imshow(binaryImage);
     title('Order by Area');
     for k = 1 : numberOfObjects
@@ -56,7 +55,7 @@
     [blah, order] = sort(allCircularities(:), 'ascend'); 
     sortedObjectsCircularity = regionProps(order);
 
-    subplot(2,2,3);
+    subplot(3,2,3);
     imshow(binaryImage);
     title('Order by Circularity');
     for k = 1 : numberOfObjects
@@ -79,7 +78,7 @@
     [blah, order] = sort(sharp(:), 'ascend'); 
     sortedObjectsSharp = regionProps(order);
    
-    subplot(2,2,4);
+    subplot(3,2,4);
     imshow(binaryImage);
     title('Order by Sharpness');
     for k = 1 : numberOfObjects
@@ -96,5 +95,19 @@
             round(sortedObjectsSharp(k).BoundingBox(2)), rgbPerimeter);
         hold off
     end
+    
+    subplot(3,2,[5,6]);
+    %rgb = [colors(:,1), colors(:,2), colors(:,3)]
+    %imshow(rgb');
+    img=zeros(1,64,3); %initialize
+    img(1,:,:)=colors;  
+    
+    imshow(img);
+    %diminish space between label and image
+    xh = get(gca,'xlabel')
+    xlabel('smaller to bigger');
+    p = get(xh,'position');
+    p(2) = 0.5*p(2) ;
+    set(xh,'position',p)
 
 end

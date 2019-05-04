@@ -1,4 +1,4 @@
-function individualObjects(originalImage, regionProps, numberOfObjects)
+function individualObjects(originalImage, regionProps, numberOfObjects, sharpness)
     figure;
     set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
     
@@ -12,8 +12,9 @@ function individualObjects(originalImage, regionProps, numberOfObjects)
         perimeter = regionProps(k).Perimeter;
         area = regionProps(k).Area;
         circularity = (perimeter^2)/(4*pi*area);
-        subplot(3, 4, k);
+        subplot(ceil(numberOfObjects/3), 3, k);
         imshow(subImage);
-        title (sprintf('Perimeter: %g \nArea: %g \nCircularity: %g', perimeter, area, circularity));
+        title (sprintf('Perimeter: %g \nArea: %g \nCircularity: %.2g\nSharpness: %.2g', ...
+            perimeter, area, circularity,sharpness(k)));
     end
 end

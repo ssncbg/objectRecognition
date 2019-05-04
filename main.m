@@ -7,7 +7,7 @@ minAreaObject = 20;
 set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 subplot(numberOfColumns, numberOfRows, 1);
 
-originalImage = imread('Moedas3.jpg');
+originalImage = imread('Moedas1.jpg');
 imshow(originalImage);
 title('Original Image');
 
@@ -134,25 +134,26 @@ ten_cent*0.1 + twenty_cent*0.2 + fifty_cent*0.5 + euro;
 
 title(sprintf('Total amount: %g', total_amount));
 
-%==========================================================================
-%Relative distance of the objects
-%distanceObjects(originalImage, regionProps, numberOfObjects);
-%==========================================================================
-%Visualization perimeter and area of each object
-%New figure with individual images of each object
-%individualObjects(binaryImage, regionProps, numberOfObjects);
+
 %==========================================================================
 %Derivative of the objects boundary
 sharp = derivative(binaryImage, numberOfObjects);
 %==========================================================================
+%Visualization perimeter and area of each object
+%New figure with individual images of each object
+individualObjects(originalImage, regionProps, numberOfObjects, sharp);
+%==========================================================================
 %Ordering the objects depending on the, area, perimeter, circularity 
 %or sharpness
-orderingObjects(labelImage, binaryImage, regionProps, numberOfObjects, sharp);
+orderingObjects(binaryImage, regionProps, numberOfObjects, sharp);
+%==========================================================================
+%Relative distance of the objects
+distanceObjects(originalImage, regionProps, numberOfObjects);
 %==========================================================================
 %From a user selection of given object (the user should select one object), 
 %generate a figure that shows an ordered list of objects
 %i.e. from the most similar to the less similar of the chosen object. 
-%similarObjects(originalImage, regionProps, numberOfObjects, sharp);
+similarObjects(originalImage, regionProps, numberOfObjects, sharp);
 %==========================================================================
 
 

@@ -1,3 +1,4 @@
+
 function similarObjects(originalImage, regionProps, numberOfObjects, sharpness)
     figure
     title('Similar objects');
@@ -62,7 +63,6 @@ function similarObjects(originalImage, regionProps, numberOfObjects, sharpness)
         
     subplot(4, numberOfObjects, numberOfObjects + 1);
     imshow(imcrop(originalImage, sortedObjectsArea(1).BoundingBox));
-    title('Selected Object');
     xlabel (sprintf('Area: %g',sortedObjectsArea(1).Area));
     
     sortedObjectsArea(1) = [];
@@ -89,7 +89,6 @@ function similarObjects(originalImage, regionProps, numberOfObjects, sharpness)
         
     subplot(4, numberOfObjects, numberOfObjects*2 + 1);
     imshow(imcrop(originalImage, sortedObjectsCircularity(1).BoundingBox));
-    title('Selected Object');
     xlabel (sprintf('Circularity: %.2g', coinSelectedCircularity));
     
     sortedObjectsCircularity(1) = [];
@@ -124,7 +123,6 @@ function similarObjects(originalImage, regionProps, numberOfObjects, sharpness)
         
     subplot(4, numberOfObjects, numberOfObjects*3 + 1);
     imshow(imcrop(originalImage, sortedObjectsSharpness(1).BoundingBox));
-    title('Selected Object');
     xlabel (sprintf('Sharpness: %.2g', sortedSharpness(1)));
     
     sortedObjectsSharpness(1) = [];
@@ -141,4 +139,6 @@ function similarObjects(originalImage, regionProps, numberOfObjects, sharpness)
         imshow(subImage);
         xlabel (sprintf('Sharpness: %.2g', sortedSharpness(k)));
     end
+    
+    %diminish space between label and image
 end
