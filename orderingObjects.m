@@ -1,76 +1,100 @@
-    function orderingObjects(originalImage, regionProps, numberOfObjects, sharp)
+    function orderingObjects(labelImage, binaryImage, regionProps, numberOfObjects, sharp)
     figure;
     set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
-
-    %Perimeter
-    [blah, order] = sort([regionProps(:).Perimeter], 'descend'); 
+    colors = colormap('jet');
+    numberOfColor = length(colors);
+    
+    %====Perimeter=========================================================
+    [blah, order] = sort([regionProps(:).Perimeter], 'ascend');
     sortedObjectsPerimeter = regionProps(order);
+    
+    subplot(2,2,1);
+    imshow(binaryImage);
+    title('Order by Perimeter');
     for k = 1 : numberOfObjects
         % Find the bounding box of each blob.
-        thisBlobsBoundingBox = sortedObjectsPerimeter(k).BoundingBox;  % Get list of pixels in current blob.
-        % Extract out this coin into it's own image.
-        subImage = imcrop(originalImage, thisBlobsBoundingBox);
-        perimeter = sortedObjectsPerimeter(k).Perimeter;
+        thisBlobsBoundingBox = sortedObjectsPerimeter(k).BoundingBox;
 
-        subplot(4, numberOfObjects, k);
-        imshow(subImage);
-        title (sprintf('Perimeter: %g', perimeter));
+        subImage = imcrop(binaryImage, thisBlobsBoundingBox);
+        
+        indexColor = round(numberOfColor/ (numberOfObjects - k + 1));
+        rgbPerimeter = label2rgb(bwlabel(subImage), colors(indexColor, :), 'k');
+        
+        hold on
+        image(round(sortedObjectsPerimeter(k).BoundingBox(1)), ...
+            round(sortedObjectsPerimeter(k).BoundingBox(2)), rgbPerimeter);
+        hold off
     end
 
-    %Area
-    [blah, order] = sort([regionProps(:).Area], 'descend'); 
+    %====Area==============================================================
+    [blah, order] = sort([regionProps(:).Area], 'ascend'); 
     sortedObjectsArea = regionProps(order);
+    
+    subplot(2,2,2);
+    imshow(binaryImage);
+    title('Order by Area');
     for k = 1 : numberOfObjects
-        % Find the bounding box of each blob.
-        thisBlobsBoundingBox = sortedObjectsArea(k).BoundingBox;  % Get list of pixels in current blob.
-        % Extract out this coin into it's own image.
-        subImage = imcrop(originalImage, thisBlobsBoundingBox);
-        area = sortedObjectsArea(k).Area;
+         % Find the bounding box of each blob.
+        thisBlobsBoundingBox = sortedObjectsArea(k).BoundingBox;
 
-        subplot(4, numberOfObjects, numberOfObjects + k);
-        imshow(subImage);
-        title (sprintf('Area: %g', area));
+        subImage = imcrop(binaryImage, thisBlobsBoundingBox);
+        
+        indexColor = round(numberOfColor/ (numberOfObjects - k + 1));
+        rgbPerimeter = label2rgb(bwlabel(subImage), colors(indexColor, :), 'k');
+        
+        hold on
+        image(round(sortedObjectsArea(k).BoundingBox(1)), ...
+            round(sortedObjectsArea(k).BoundingBox(2)), rgbPerimeter);
+        hold off
     end
 
-    %Circularity
+    %====Circularity=======================================================
     allPerimeters = [regionProps.Perimeter];
     allAreas = [regionProps.Area];
     allCircularities = allPerimeters  .^ 2 ./ (4 * pi* allAreas);
 
-    [blah, order] = sort(allCircularities(:), 'descend'); 
+    [blah, order] = sort(allCircularities(:), 'ascend'); 
     sortedObjectsCircularity = regionProps(order);
 
+    subplot(2,2,3);
+    imshow(binaryImage);
+    title('Order by Circularity');
     for k = 1 : numberOfObjects
-        % Find the bounding box of each blob.
-        thisBlobsBoundingBox = sortedObjectsCircularity(k).BoundingBox;  % Get list of pixels in current blob.
-        % Extract out this coin into it's own image.
-        subImage = imcrop(originalImage, thisBlobsBoundingBox);
+         % Find the bounding box of each blob.
+        thisBlobsBoundingBox = sortedObjectsCircularity(k).BoundingBox;
 
-        perimeter = sortedObjectsCircularity(k).Perimeter;
-        area = sortedObjectsCircularity(k).Area;
-        circularity = (perimeter^2)/(4*pi*area);
-
-        subplot(4, numberOfObjects, numberOfObjects*2 + k);
-        imshow(subImage);
-        title (sprintf('Circularity: %g', circularity));
+        subImage = imcrop(binaryImage, thisBlobsBoundingBox);
+        
+        indexColor = round(numberOfColor/ (numberOfObjects - k + 1));
+        rgbPerimeter = label2rgb(bwlabel(subImage), colors(indexColor, :), 'k');
+        
+        hold on
+        image(round(sortedObjectsCircularity(k).BoundingBox(1)), ...
+            round(sortedObjectsCircularity(k).BoundingBox(2)), rgbPerimeter);
+        hold off
     end
+   
+    %====Sharpness=======================================================
     
-    %Sharpness
-    
-    [blah, order] = sort(sharp(:), 'descend'); 
+    [blah, order] = sort(sharp(:), 'ascend'); 
     sortedObjectsSharp = regionProps(order);
    
+    subplot(2,2,4);
+    imshow(binaryImage);
+    title('Order by Sharpness');
     for k = 1 : numberOfObjects
-        % Find the bounding box of each blob.
-         thisBlobsBoundingBox = sortedObjectsSharp(k).BoundingBox;  % Get list of pixels in current blob.
-         % Extract out this coin into it's own image.
-         subImage = imcrop(originalImage, thisBlobsBoundingBox);
-         sharpness = blah(k);
-         subplot(4, numberOfObjects, numberOfObjects*3 + k);
-         imshow(subImage);
-         title (sprintf('Sharpness: %g', sharpness));
+         % Find the bounding box of each blob.
+        thisBlobsBoundingBox = sortedObjectsSharp(k).BoundingBox;
+
+        subImage = imcrop(binaryImage, thisBlobsBoundingBox);
+        
+        indexColor = round(numberOfColor/ (numberOfObjects - k + 1));
+        rgbPerimeter = label2rgb(bwlabel(subImage), colors(indexColor, :), 'k');
+        
+        hold on
+        image(round(sortedObjectsSharp(k).BoundingBox(1)), ...
+            round(sortedObjectsSharp(k).BoundingBox(2)), rgbPerimeter);
+        hold off
     end
 
-    mainTitle = suptitle('Ordered objects');
-    mainTitle.FontSize = 20;
 end

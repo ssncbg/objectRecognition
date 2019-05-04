@@ -16,7 +16,7 @@ function [xMin,yMin,xMax,yMax, difference] = sharpness(S)
            nrMin = 1;
            slope = 1;
        end
-       [m,n] = size(S)
+       [m,n] = size(S);
        for j=2:n
            if slope == -1
               if S(j-1) < S(j) && S(j) - S(j-1) > 0.005

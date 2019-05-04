@@ -21,11 +21,14 @@ redThresholdImage = (redBand >= redThresholdValue);
 %==========================================================================
 %Obtaining binary image with holes filled
 labelImageBeforeFill=bwlabel(redThresholdImage,4);
-regionPropsBeforeFill = regionprops(labelImageBeforeFill, rgb2gray(originalImage),'Area', 'Perimeter', 'Centroid', 'BoundingBox', 'EquivDiameter');
+regionPropsBeforeFill = regionprops(labelImageBeforeFill, ...
+    rgb2gray(originalImage),'Area', 'Perimeter', 'Centroid', ...
+    'BoundingBox', 'EquivDiameter', 'PixelList');
 
 filledImage = imfill(redThresholdImage, 8,'holes');
 labelImage=bwlabel(filledImage,4);
-regionProps = regionprops(labelImage, rgb2gray(originalImage),'Area', 'Perimeter', 'Centroid', 'BoundingBox', 'EquivDiameter');
+regionProps = regionprops(labelImage, rgb2gray(originalImage),'Area', ...
+    'Perimeter', 'Centroid', 'BoundingBox', 'EquivDiameter', 'PixelList');
 
 binaryImage = zeros(size(redThresholdImage));
 %Fills small holes and new binary image
@@ -44,8 +47,8 @@ end
 se = strel('disk', 10);
 binaryImage = imerode(binaryImage,se);
  
-[lb num]=bwlabel(binaryImage,4);
-regionProps = regionprops(lb, rgb2gray(originalImage),'all');
+labelImage = bwlabel(binaryImage,4);
+regionProps = regionprops(labelImage, rgb2gray(originalImage),'all');
 numberOfObjects = length(find([regionProps.Area]>minAreaObject));
 
 subplot(numberOfColumns, numberOfRows, 2);
@@ -103,7 +106,8 @@ for k = 1:numberOfObjects
         radius = regionProps(k).EquivDiameter / 2;
         subImage = imcrop(originalImage, thisBlobsBoundingBox);
         hold on
-        image(round(regionProps(k).Centroid(1) - radius), round(regionProps(k).Centroid(2) - radius), subImage);
+        image(round(regionProps(k).BoundingBox(1)), ...
+            round(regionProps(k).BoundingBox(2)), subImage);
         hold off
         
         if(area < 12000 && area > 11000)
@@ -132,18 +136,18 @@ title(sprintf('Total amount: %g', total_amount));
 
 %==========================================================================
 %Relative distance of the objects
-distanceObjects(originalImage, regionProps, numberOfObjects);
+%distanceObjects(originalImage, regionProps, numberOfObjects);
 %==========================================================================
 %Visualization perimeter and area of each object
 %New figure with individual images of each object
-%individualObjects(originalImage, regionProps, numberOfObjects);
+%individualObjects(binaryImage, regionProps, numberOfObjects);
 %==========================================================================
 %Derivative of the objects boundary
-%sharp = derivative(binaryImage, numberOfObjects);
+sharp = derivative(binaryImage, numberOfObjects);
 %==========================================================================
 %Ordering the objects depending on the, area, perimeter, circularity 
 %or sharpness
-%orderingObjects(originalImage, regionProps, numberOfObjects, sharp);
+orderingObjects(labelImage, binaryImage, regionProps, numberOfObjects, sharp);
 %==========================================================================
 %From a user selection of given object (the user should select one object), 
 %generate a figure that shows an ordered list of objects

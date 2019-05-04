@@ -1,7 +1,6 @@
 function sharp = derivative(image, numberOfObjects)
     figure;
     set(gcf, 'Position', get(0, 'Screensize'));
-    %set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
     plotPosition = 1;
     stepSize=10;
     B = bwboundaries(image, 'noholes');
